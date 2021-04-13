@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Google API files
+sheets.googleapis.com-python.json
+client_secret.json
+
+# PyCharm Staff
+.idea/
