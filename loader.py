@@ -3,7 +3,7 @@ import pygsheets
 from localbitcoins_sdk import LBClient
 from loguru import logger
 
-from config import LB_HMAC_KEY, LB_HMAC_SECRET
+from config import LB_HMAC_KEY, LB_HMAC_SECRET, spreadsheet_name, service_file_name
 
 
 logger.info('Initializing clients...')
@@ -11,8 +11,8 @@ logger.info('Initializing clients...')
 lb_client = LBClient(LB_HMAC_KEY, LB_HMAC_SECRET)
 
 # Google Sheets client
-google_client = pygsheets.authorize(service_file='localbitcoinsstat-a63a7a6949b0.json')
-spreadsheet = google_client.open('Local Bitcoins Stat')
+google_client = pygsheets.authorize(service_file=service_file_name)
+spreadsheet = google_client.open(spreadsheet_name)
 worksheet = spreadsheet.sheet1
 
 # Storage

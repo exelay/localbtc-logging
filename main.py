@@ -51,6 +51,22 @@ class DataReceiver:
         logger.info('New orders got.')
         return new_orders
 
+    def get_all_orders(self) -> List:
+        self._get_order_list()
+        logger.info('Getting all orders...')
+        new_orders = list()
+        for order in self.new_orders:
+            date = datetime.fromisoformat(order['data']['released_at'])
+            new_order = Order(
+                date=date.strftime("%d.%m.%Y %H:%M"),
+                amount_btc=order['data']['amount_btc'],
+                amount_rub=order['data']['amount'],
+            )
+            new_orders.append(new_order)
+        self.new_orders = []
+        logger.info('All orders got.')
+        return new_orders
+
 
 class Writer:
     current_row: int
@@ -82,6 +98,9 @@ class Manager:
     def check_new_data(self):
         self.data = self.receiver.get_new_orders()
 
+    def check_all_data(self):
+        self.data = self.receiver.get_all_orders()
+
     def write_data(self):
         for order in self.data:
             self.writer.write_row(order)
@@ -94,5 +113,8 @@ if __name__ == '__main__':
     while True:
         manager.check_new_data()
         if manager.data:
+            manager.write_data()
+        elif manager.writer.current_row == 2:
+            manager.check_all_data()
             manager.write_data()
         sleep(60)
